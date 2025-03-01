@@ -19,6 +19,8 @@ export default function Navbar() {
           label={"Add Vendor"}
         />
       </Link>
+
+      <Button label={"Log Out"} />
     </nav>
   );
 }

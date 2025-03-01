@@ -65,7 +65,6 @@ export default function EditVendor({ vendor }) {
   }
   return (
     <div>
-      {" "}
       <form
         onSubmit={handleSubmit}
         className="p-4 border rounded"

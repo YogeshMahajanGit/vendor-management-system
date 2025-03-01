@@ -45,16 +45,23 @@ export async function POST(request) {
   }
 }
 
-export async function GET() {
+export async function GET(request) {
   try {
     await connectMongoDB();
 
-    const vendor = await Vendor.find();
+    const searchParams = new URL(request.url).searchParams;
+    const page = parseInt(searchParams.get("page")) || 1;
+    const limit = parseInt(searchParams.get("limit")) || 3;
+    const skip = (page - 1) * limit;
 
-    return NextResponse.json(
-      { message: "All Vendor", vendor },
-      { status: 200 }
-    );
+    const vendors = await Vendor.find().skip(skip).limit(limit);
+    const totalCount = await Vendor.countDocuments();
+
+    return NextResponse.json({
+      vendors,
+      totalPages: Math.ceil(totalCount / limit),
+      currentPage: page,
+    });
   } catch (error) {
     return NextResponse.json(
       { message: "Failed to fetch vendor" },
