@@ -2,6 +2,7 @@
 import Button from "@/components/Button";
 import Inputs from "@/components/Inputs";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function page() {
   const initialState = {
@@ -14,6 +15,9 @@ export default function page() {
     country: "",
     zip: "",
   };
+  const [formData, setFormData] = useState(initialState);
+  const [error, setError] = useState("");
+  const router = useRouter();
 
   const fields = [
     { label: "Vendor Name", name: "name", required: true },
@@ -30,15 +34,42 @@ export default function page() {
     { label: "Country", name: "country" },
     { label: "Zip Code", name: "zip", type: "number" },
   ];
-  const [formData, setFormData] = useState(initialState);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    console.log(process.env.BACKEND_URL);
+
+    if (!formData.name || !formData.bankAccount || !formData.bankName) {
+      setError("All required fields must be filled");
+      return;
+    }
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}vendor`, {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (res.ok) {
+        router.push("/");
+      } else {
+        setError("failed to cereate a vendor");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <div>
       <form
-        // onSubmit={handleSubmit}
+        onSubmit={handleSubmit}
         className="p-4 border rounded"
       >
         {fields.map(({ label, name, type, required }) => (
@@ -52,10 +83,10 @@ export default function page() {
             onChange={handleChange}
           />
         ))}
-
+        {error ? error : ""}
         <Button
           type={"submit"}
-          lable={"Add Vendor"}
+          label={"Add Vendor"}
         />
       </form>
     </div>

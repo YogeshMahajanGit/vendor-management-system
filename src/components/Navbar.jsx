@@ -16,7 +16,7 @@ export default function Navbar() {
       >
         <Button
           type={"submit"}
-          lable={"Add Vendor"}
+          label={"Add Vendor"}
         />
       </Link>
     </nav>

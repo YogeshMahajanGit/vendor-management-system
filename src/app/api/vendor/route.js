@@ -65,14 +65,15 @@ export async function GET() {
 
 export async function DELETE(request) {
   try {
-    const id = request.nextUrl.searchParams.get("id");
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
     await connectMongoDB();
 
     if (!id) {
       return NextResponse.json({ error: "Id not found" }, { status: 500 });
     }
 
-    const vendor = await Vendor.findByIdAndUpdate(id);
+    const vendor = await Vendor.findByIdAndDelete(id);
     console.log(vendor);
     return NextResponse.json({ message: "Vendor Deleted" }, { status: 200 });
   } catch (error) {

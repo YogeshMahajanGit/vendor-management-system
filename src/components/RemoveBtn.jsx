@@ -1,10 +1,30 @@
 "use client";
 import { useState } from "react";
 import { HiOutlineTrash } from "react-icons/hi";
+import { useRouter } from "next/navigation";
 
-export default function ModalRemoveBtn() {
+export default function ModalRemoveBtn({ id }) {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
 
+  async function handleDeleteVendor() {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}vendor?id=${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to delete vendor");
+      } else {
+        router.refresh();
+      }
+    } catch (error) {
+      console.error("Error deleting vendor:", error.message);
+    }
+  }
   return (
     <>
       <button
@@ -63,7 +83,10 @@ export default function ModalRemoveBtn() {
                   Are you sure you want to delete this product?
                 </h3>
                 <button
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => {
+                    handleDeleteVendor();
+                    setIsOpen(false);
+                  }}
                   className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center"
                 >
                   Yes, I'm sure
