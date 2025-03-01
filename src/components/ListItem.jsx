@@ -60,8 +60,6 @@ export default function ListItem() {
         </div>
       ))}
 
-      {/* Pagination*/}
-
       <div className="flex justify-center mt-4 gap-2">
         <button
           disabled={currentPage === 1}

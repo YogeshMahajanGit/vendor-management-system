@@ -1,3 +1,4 @@
+// "use client";
 import Link from "next/link";
 import Button from "./Button";
 
@@ -20,7 +21,7 @@ export default function Navbar() {
         />
       </Link>
 
-      <Button label={"Log Out"} />
+      <Button label="Log Out" />
     </nav>
   );
 }
